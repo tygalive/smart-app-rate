@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private void showDialog() {
 
         final RatingDialog ratingDialog = new RatingDialog.Builder(this)
-                .session(3)
+//                .session(3)
                 .threshold(3)
                 .ratingBarColor(R.color.yellow)
                 .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onFormSubmitted(String feedback) {
                         Log.i(TAG,"Feedback:" + feedback);
                     }
-                })
-                .build();
+                }).build();
 
 
         ratingDialog.show();
