@@ -48,6 +48,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
     private float threshold;
     private int session;
     private boolean thresholdPassed = true;
+    private int rating;
 
     public RatingDialog(Context context, Builder builder) {
         super(context);
@@ -167,7 +168,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
             }
 
             if (builder.ratingDialogFormListener != null) {
-                builder.ratingDialogFormListener.onFormSubmitted(feedback);
+                builder.ratingDialogFormListener.onFormSubmitted(feedback, rating);
             }
 
             dismiss();
@@ -183,8 +184,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-
-
+        this.rating = Math.round(ratingBar.getRating());
         if (ratingBar.getRating() >= threshold) {
             thresholdPassed = true;
 
@@ -303,18 +303,18 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
         if (session == count) {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putInt(SESSION_COUNT, 1);
-            editor.commit();
+            editor.apply();
             return true;
         } else if (session > count) {
             count++;
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putInt(SESSION_COUNT, count);
-            editor.commit();
+            editor.apply();
             return false;
         } else {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putInt(SESSION_COUNT, 2);
-            editor.commit();
+            editor.apply();
             return false;
         }
     }
@@ -323,7 +323,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
         sharedpreferences = context.getSharedPreferences(MyPrefs, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean(SHOW_NEVER, true);
-        editor.commit();
+        editor.apply();
     }
 
     public static class Builder {
@@ -351,7 +351,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
         }
 
         public interface RatingDialogFormListener {
-            void onFormSubmitted(String feedback);
+            void onFormSubmitted(String feedback, int stars);
         }
 
         public interface RatingDialogListener {
